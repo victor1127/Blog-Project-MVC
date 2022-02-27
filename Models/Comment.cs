@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BlogProjectMVC.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,6 +30,7 @@ namespace BlogProjectMVC.Models
         [StringLength(500, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         [Display(Name = "Moderated Comment")]
         public string ModeratedContent { get; set; }
+        public ModerationReason ModeratedReason { get; set; }
 
         //Navigation properties
         public virtual Post Post { get; set; }

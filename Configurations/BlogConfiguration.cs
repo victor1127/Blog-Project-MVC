@@ -27,6 +27,11 @@ namespace BlogProjectMVC.Configurations
             builder.Entity<Blog>()
                    .Ignore(i => i.ImageFile);
 
+            builder.Entity<Blog>()
+                   .HasOne(b => b.Author)
+                   .WithMany(u => u.Blogs)
+                   .HasForeignKey(b => b.AuthorId);
+
         }
     }
 }

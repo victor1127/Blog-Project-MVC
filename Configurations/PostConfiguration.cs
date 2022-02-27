@@ -36,6 +36,12 @@ namespace BlogProjectMVC.Configurations
                    .WithMany(b => b.Posts)
                    .HasForeignKey(p => p.BlogId);
 
+            builder.Entity<Post>()
+                   .HasOne(p => p.Author)
+                   .WithMany(u => u.Posts)
+                   .HasForeignKey(p => p.AuthorId);
+
         }
+
     }
 }
