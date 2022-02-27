@@ -31,6 +31,11 @@ namespace BlogProjectMVC.Configurations
             builder.Entity<Post>()
                    .Ignore(i => i.ImageFile);
 
+            builder.Entity<Post>()
+                   .HasOne(p => p.Blog)
+                   .WithMany(b => b.Posts)
+                   .HasForeignKey(p => p.BlogId);
+
         }
     }
 }

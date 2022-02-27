@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlogProjectMVC.Models
@@ -31,12 +33,19 @@ namespace BlogProjectMVC.Models
         public bool IsReady { get; set; }
         public string Slug { get; set; }
         public byte[] ImageData { get; set; }
-        public string ImageType { get; set; }
+        public string ImageType { get; set; } 
 
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
 
+        //Nav properties
+        public virtual Blog Blog { get; set; }
+        public virtual IdentityUser Author { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
+        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+
 
 
     }
+
 }
