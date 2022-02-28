@@ -28,6 +28,15 @@ namespace BlogProjectMVC.Configurations
                    .WithMany(p => p.Comments)
                    .HasForeignKey(c => c.PostId);
 
+            builder.Entity<Comment>()
+                   .HasOne(c => c.Author)
+                   .WithMany(u => u.Comments)
+                   .HasForeignKey(c => c.AuthorId);
+
+            builder.Entity<Comment>()
+                   .HasOne(c => c.Author)
+                   .WithMany(u => u.Comments)
+                   .HasForeignKey(c => c.AuthorId);
 
 
         }

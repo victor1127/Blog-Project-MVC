@@ -27,8 +27,12 @@ namespace BlogProjectMVC.Models
         public byte[] ImageData { get; set; }
         public string ImageType { get; set; }
         public IFormFile ImageFile { get; set; }
+
+
         public ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
         public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+        public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
 
     }
 }
