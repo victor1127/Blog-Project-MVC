@@ -16,13 +16,13 @@ namespace BlogProjectMVC.Configurations
 
             builder.Entity<Blog>()
                    .Property(t => t.Title)
-                   .IsRequired()
-                   .HasMaxLength(100);
+                   .HasMaxLength(100)
+                   .IsRequired();
 
             builder.Entity<Blog>()
                    .Property(d => d.Description)
-                   .IsRequired()
-                   .HasMaxLength(500);
+                   .HasMaxLength(500)
+                   .IsRequired();
 
             builder.Entity<Blog>()
                    .Ignore(i => i.ImageFile);

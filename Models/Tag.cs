@@ -13,7 +13,6 @@ namespace BlogProjectMVC.Models
         public int PostId { get; set; }
         public string AuthorId { get; set; }
 
-        [Required]
         [StringLength(25, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         public string Title { get; set; }
 

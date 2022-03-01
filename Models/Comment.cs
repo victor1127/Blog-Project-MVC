@@ -12,7 +12,6 @@ namespace BlogProjectMVC.Models
         public string AuthorId { get; set; }
         public string ModeratorId { get; set; }
 
-        [Required]
         [StringLength(500, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         [Display(Name ="Comment")]
         public string Content { get; set; }

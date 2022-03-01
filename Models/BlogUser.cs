@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace BlogProjectMVC.Models
 {
     public class BlogUser:IdentityUser
     {
-        [Required]
+
         [Display(Name ="First name")]
         public string FirstName { get; set; }
         [Display(Name = "Last name")]
@@ -26,13 +27,13 @@ namespace BlogProjectMVC.Models
         public string TwetterUrl { get; set; }
         public byte[] ImageData { get; set; }
         public string ImageType { get; set; }
+        [NotMapped]
         public IFormFile ImageFile { get; set; }
 
-
-        public ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
-        public ICollection<Post> Posts { get; set; } = new HashSet<Post>();
-        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
-        public ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
+        public virtual ICollection<Blog> Blogs { get; set; } = new HashSet<Blog>();
+        public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
+        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+        public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
 
     }
 }

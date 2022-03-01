@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +13,10 @@ namespace BlogProjectMVC.Models
     {
         public int Id { get; set; }
         public string AuthorId { get; set; }
-        [Required]
+
         [StringLength(100,ErrorMessage ="The {0} must be at least {2} and at most {1}", MinimumLength =2)]
         public string Title { get; set; }
-        [Required]
+
         [StringLength(500, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         public string Description { get; set; }
 
@@ -30,6 +31,7 @@ namespace BlogProjectMVC.Models
         public string ImageType { get; set; }
 
         [Display(Name = "Image")]
+        [NotMapped]
         public IFormFile ImageFile { get; set; }
 
         //Nav properties

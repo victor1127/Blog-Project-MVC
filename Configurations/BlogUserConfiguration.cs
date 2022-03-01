@@ -11,6 +11,7 @@ namespace BlogProjectMVC.Configurations
     {
         public BlogUserConfiguration(ModelBuilder builder)
         {
+
             builder.Entity<BlogUser>()
                    .Property(f => f.FirstName)
                    .HasMaxLength(50)

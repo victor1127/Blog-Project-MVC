@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlogProjectMVC.Models
 {
@@ -13,15 +14,12 @@ namespace BlogProjectMVC.Models
         public int BlogId { get; set; }
         public string AuthorId { get; set; }
 
-        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         public string Title { get; set; }
 
-        [Required]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         public string Abstract { get; set; }
 
-        [Required]
         public string Content { get; set; }
 
         [DataType(DataType.Date)]
@@ -37,6 +35,7 @@ namespace BlogProjectMVC.Models
         public string ImageType { get; set; } 
 
         [Display(Name = "Image")]
+        [NotMapped]
         public IFormFile ImageFile { get; set; }
 
         //Nav properties
