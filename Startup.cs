@@ -34,8 +34,10 @@ namespace BlogProjectMVC
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders()
+                    .AddDefaultUI();
+
             services.AddRazorPages();
             services.AddControllersWithViews();
         }
