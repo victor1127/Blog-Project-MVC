@@ -27,6 +27,7 @@ namespace BlogProjectMVC.Services
         public async Task ManageUserRoles()
         {
             await CreateRolesAsync();
+            await CreateUserAsync();
         }
 
         private async Task CreateRolesAsync()
@@ -41,9 +42,12 @@ namespace BlogProjectMVC.Services
 
         private async Task CreateUserAsync()
         {
+            if (_dbContext.Users.Any()) return;
+
             var admUser = new BlogUser
             {
                 Email = "vsosa01127@gmail.com",
+                UserName= "vsosa01127@gmail.com",
                 FirstName = "Victor",
                 LastName = "Sosa",
                 EmailConfirmed = true
@@ -52,15 +56,16 @@ namespace BlogProjectMVC.Services
             var modUser = new BlogUser
             {
                 Email = "vsosa@gmail.com",
+                UserName= "vsosa@gmail.com",
                 FirstName = "Manuel",
                 LastName = "De Armas",
                 EmailConfirmed = true
             };
 
-            await _userManager.CreateAsync(admUser, "0000");
+            await _userManager.CreateAsync(admUser, "Victor01127*");
             await _userManager.AddToRoleAsync(admUser, BlogRoles.Administrador.ToString());
 
-            await _userManager.CreateAsync(modUser, "0000");
+            await _userManager.CreateAsync(modUser, "Victor01127*");
             await _userManager.AddToRoleAsync(modUser, BlogRoles.Moderador.ToString());
 
         }
