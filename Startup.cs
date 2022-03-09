@@ -1,6 +1,7 @@
 using BlogProjectMVC.Data;
 using BlogProjectMVC.Models;
 using BlogProjectMVC.Services;
+using BlogProjectMVC.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,8 +41,13 @@ namespace BlogProjectMVC
                     .AddDefaultUI();
 
             services.AddRazorPages();
+
             services.AddControllersWithViews();
+
             services.AddScoped<RoleService>();
+
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             services.AddScoped<IBlogEmailSender, EmailService>();
 
         }
