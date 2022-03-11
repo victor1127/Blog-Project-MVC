@@ -1,0 +1,42 @@
+﻿@model BlogProjectMVC.ViewModels.InputModel
+
+
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
+            <div class="my-5">
+
+                <form id="contactForm" asp-action="Contact" data-sb-form-api-token="API_TOKEN" autocomplete="off">
+                    <div class="form-floating">
+                        <input asp-for="Name" class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" required />
+                        <label asp-for="Name" for="name">Name</label>
+                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Email" class="form-control" id="email" type="email" placeholder="Enter your email..." data-sb-validations="required,email" required />
+                        <label asp-for="Email" for="email">Email address</label>
+                        <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+                        <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Subject" class="form-control" id="subject" type="text" placeholder="What is the subject..." data-sb-validations="required" required />
+                        <label asp-for="Subject" for="subject">Subject</label>
+                        <div class="invalid-feedback" data-sb-feedback="subject:required">A subject is required.</div>
+                    </div>
+                    <div class="form-floating">
+                        <textarea asp-for="Body" class="form-control" id="message" placeholder="Enter your message here..." style="height: 12rem" data-sb-validations="required" required></textarea>
+                        <label asp-for="Body" for="message">Message</label>
+                        <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
+                    </div>
+                    <br />
+                    <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+}
