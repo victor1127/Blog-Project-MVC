@@ -7,15 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BlogProjectMVC.Data;
 using BlogProjectMVC.Models;
+using BlogProjectMVC.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogProjectMVC.Controllers
 {
     public class BlogsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public BlogsController(ApplicationDbContext context)
+        private readonly IImageService _imageService;
+        private readonly UserManager<BlogUser> _userManager;
+        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager)
         {
             _context = context;
+            _imageService = imageService;
+            _userManager = userManager;
         }
 
         // GET: Blogs
@@ -45,9 +52,10 @@ namespace BlogProjectMVC.Controllers
         }
 
         // GET: Blogs/Create
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id");
+            //ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id");
             return View();
         }
 
@@ -56,15 +64,21 @@ namespace BlogProjectMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AuthorId,Title,Description,Created,Updated,ImageData,ImageType")] Blog blog)
+        public async Task<IActionResult> Create([Bind("Title,Description,ImageFile")] Blog blog)
         {
             if (ModelState.IsValid)
             {
+                //author
+                blog.Created = DateTime.Now;
+                blog.AuthorId = _userManager.GetUserId(User);
+                blog.ImageData = await _imageService.ConvertFileToByteArray(blog.ImageFile);
+                blog.ImageType = blog.ImageFile?.ContentType;
+
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id", blog.AuthorId);
+            //ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id", blog.AuthorId);
             return View(blog);
         }
 

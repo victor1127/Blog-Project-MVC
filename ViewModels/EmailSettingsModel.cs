@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlogProjectMVC.ViewModels
 {
-    public class EmailSettings
+    public class EmailSettingsModel
     {
         public string Email { get; set; }
         public string Password { get; set; }

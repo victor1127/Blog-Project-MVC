@@ -12,8 +12,8 @@ namespace BlogProjectMVC.Services
 {
     public class EmailService : IBlogEmailSender
     {
-        private readonly EmailSettings _emailSettings;
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        private readonly EmailSettingsModel _emailSettings;
+        public EmailService(IOptions<EmailSettingsModel> emailSettings)
         {
             _emailSettings = emailSettings.Value;
         }

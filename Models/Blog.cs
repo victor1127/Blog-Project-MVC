@@ -21,12 +21,14 @@ namespace BlogProjectMVC.Models
         public string Description { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name ="Created date")]
+        [Display(Name ="Created")]
         public DateTime Created { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Updated date")]
+        [Display(Name = "Updated")]
         public DateTime? Updated { get; set; }
+
+        [Display(Name = "Image")]
         public byte[] ImageData { get; set; }
         public string ImageType { get; set; }
 

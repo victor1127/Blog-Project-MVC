@@ -16,9 +16,10 @@ namespace BlogProjectMVC.Models
         public string FirstName { get; set; }
         [Display(Name = "Last name")]
         public string LastName { get; set; }
+        [Display(Name ="Author")]
         public string FullName
         {
-            get { return $"{FirstName }{ LastName}"; }
+            get { return $"{FirstName} {LastName}"; }
         }
 
         [DataType(DataType.Url)]

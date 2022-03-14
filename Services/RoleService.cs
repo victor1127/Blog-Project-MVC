@@ -34,7 +34,7 @@ namespace BlogProjectMVC.Services
         {
             if (_dbContext.Roles.Any()) return;
 
-            foreach(var role in Enum.GetNames(typeof(BlogRoles)))
+            foreach (var role in Enum.GetNames(typeof(BlogRoles)))
             {
                 await _roleManager.CreateAsync(new IdentityRole(role));
             }
