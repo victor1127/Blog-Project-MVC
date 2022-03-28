@@ -11246,3 +11246,37 @@ header.masthead .site-heading .h1 {
     font-size: 2.25rem;
   }
 }
+
+.btn-color {
+    background: #ffedec;
+    width:100px;
+}
+
+div.swal2-container.swal2-center.swal2-backdrop-show > div {
+    height: 400px;
+    width:300px;
+    outline: 1px solid #ff9791;
+}
+
+.swal2-image{
+    height:200px;
+    width:100%;
+    position:center center;
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+.t-bg {
+    background-color: #e6d2d1;
+    display:block;
+}
+
+div.swal2-html-container{
+    margin:0;
+}
+
+div.swal2-actions {
+    margin-top: 0;
+    margin-bottom: 0;
+}

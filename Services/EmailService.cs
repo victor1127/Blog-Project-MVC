@@ -68,6 +68,6 @@ namespace BlogProjectMVC.Services
 
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
-        }
+        }                          
     }
 }

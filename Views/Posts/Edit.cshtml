@@ -1,0 +1,93 @@
+﻿@model BlogProjectMVC.Models.Post
+@using BlogProjectMVC.Enums;
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<link href="~/css/site.css" rel="stylesheet" />
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <h4>Post</h4>
+    <hr />
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="BlogId" class="control-label fs-6"></label>
+                    <select asp-for="BlogId" class="form-select rounded" asp-items="ViewBag.BlogId" required>
+                        <option selected>Select a blog</option>
+                    </select>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="Title" class="control-label fs-6"></label>
+                    <input asp-for="Title" class="form-control rounded" required />
+                    <span asp-validation-for="Title" class="text-danger fs-6"></span>
+                </div>
+                <div class="form-group  mt-2">
+                    <label asp-for="Abstract" class="control-label fs-6"></label>
+                    <textarea asp-for="Abstract" class="form-control" required></textarea>
+                    <span asp-validation-for="Abstract" class="text-danger fs-6"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="ImageFile" class="control-label fs-6"></label>
+                    <input asp-for="ImageFile" type="file" class="form-control rounded" />
+                    <span asp-validation-for="ImageFile" class="text-danger fs-6"></span>
+                </div>
+
+                <!--Tags-->
+                <div class="form-group mt-3">
+                    <div class="row">
+                        <label class="control-label fs-6">Manage tags</label>
+                        <div class="col">
+                            <input type="text" class="form-control" id="tagInput" />
+                            <button name="Add" type="button" class="btn btn-dark btn-sm mt-2" onclick="AddTag()">Add</button>
+                            <button name="Remove" type="button" class="btn btn-dark btn-sm mt-2" onclick="RemoveTag()">Remove</button>
+
+                        </div>
+                        <div class="col">
+                            <select name="tagValues" class="form-select" multiple aria-label="multiple" id="tagList" asp-items="ViewBag.Tags"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label asp-for="State" class="control-label fs-6"></label>
+                    <select asp-for="State" class="form-select rounded" asp-items="@Html.GetEnumSelectList(typeof(PostStates))" required></select>
+                    <span asp-validation-for="State" class="text-danger fs-6"></span>
+                </div>
+                <div class="form-group my-3">
+                    <input type="submit" value="Update" class="btn btn-primary rounded btn-block w-100" />
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group mt-md-0 mt-2">
+                    <label asp-for="Content" class="control-label fs-6"></label>
+                    <textarea asp-for="Content" class="form-control" required></textarea>
+                    <span asp-validation-for="Content" class="text-danger fs-6"></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/js/Custom.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Content').summernote({
+                height: 700
+            });
+        });
+    </script>
+
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

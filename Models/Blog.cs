@@ -15,9 +15,12 @@ namespace BlogProjectMVC.Models
         public string AuthorId { get; set; }
 
         [StringLength(100,ErrorMessage ="The {0} must be at least {2} and at most {1}", MinimumLength =2)]
+        
+        [Required]
         public string Title { get; set; }
-
+        
         [StringLength(500, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
+        [Required]
         public string Description { get; set; }
 
         [DataType(DataType.Date)]

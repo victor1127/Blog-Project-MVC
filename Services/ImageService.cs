@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BlogProjectMVC.Services
@@ -25,7 +26,13 @@ namespace BlogProjectMVC.Services
             await file.CopyToAsync(stream);
             return stream.ToArray();
         }
-    }
+        
+        public async Task<byte[]> ConvertStringToByteArray(string fileName)
+        {
+            var file = $"{Directory.GetCurrentDirectory()}/wwwroot/assets/img/{fileName}";
+            return await File.ReadAllBytesAsync(file);
+        }
 
-     
+    }
+   
 }

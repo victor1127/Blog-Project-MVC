@@ -11,6 +11,8 @@ namespace BlogProjectMVC.Models
     public class Post
     {
         public int Id { get; set; }
+       
+        [Display(Name ="Blog Id")]
         public int BlogId { get; set; }
         public string AuthorId { get; set; }
 
@@ -20,6 +22,7 @@ namespace BlogProjectMVC.Models
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at most {1}", MinimumLength = 2)]
         public string Abstract { get; set; }
 
+        [Required]
         public string Content { get; set; }
 
         [DataType(DataType.Date)]
@@ -31,10 +34,11 @@ namespace BlogProjectMVC.Models
         public DateTime? Updated { get; set; }
         public PostStates State { get; set; }
         public string Slug { get; set; }
+        [Display(Name ="Cover")]
         public byte[] ImageData { get; set; }
         public string ImageType { get; set; } 
 
-        [Display(Name = "Image")]
+        [Display(Name = "Cover")]
         [NotMapped]
         public IFormFile ImageFile { get; set; }
 

@@ -28,8 +28,12 @@ namespace BlogProjectMVC.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Blogs.Include(b => b.Author);
-            return View(await applicationDbContext.ToListAsync());
+            var blogs = _context.Blogs
+                        //.Where(b=>b.Posts.Count>0)
+                        .Where(b=>b.Posts.Any(p=>p.State==Enums.PostStates.Ready))
+                        .Include(b => b.Author);
+                                               
+            return View(await blogs.ToListAsync());
         }
 
         // GET: Blogs/Details/5
@@ -68,7 +72,6 @@ namespace BlogProjectMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                //author
                 blog.Created = DateTime.Now;
                 blog.AuthorId = _userManager.GetUserId(User);
                 blog.ImageData = await _imageService.ConvertFileToByteArray(blog.ImageFile);
@@ -95,7 +98,8 @@ namespace BlogProjectMVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id", blog.AuthorId);
+
+            //ViewData["AuthorId"] = new SelectList(_context.BlogUsers, "Id", "Id", blog.AuthorId);
             return View(blog);
         }
 
@@ -104,7 +108,7 @@ namespace BlogProjectMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AuthorId,Title,Description,Created,Updated,ImageData,ImageType")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ImageFile")] Blog blog)
         {
             if (id != blog.Id)
             {
@@ -115,7 +119,18 @@ namespace BlogProjectMVC.Controllers
             {
                 try
                 {
-                    _context.Update(blog);
+                    var newBlog = await _context.Blogs.FindAsync(blog.Id);
+                    newBlog.Title = blog.Title;
+                    newBlog.Description = blog.Description;
+                    newBlog.Updated = DateTime.Now;
+
+                    if (blog.ImageFile != null)
+                    {
+                        newBlog.ImageData = await _imageService.ConvertFileToByteArray(blog.ImageFile);
+                        newBlog.ImageType = blog.ImageFile.ContentType;
+                    }
+
+                    _context.Update(newBlog);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

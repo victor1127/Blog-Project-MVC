@@ -2,8 +2,10 @@
 using BlogProjectMVC.Enums;
 using BlogProjectMVC.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,14 +16,21 @@ namespace BlogProjectMVC.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly IImageService _imageService;
+        private readonly IConfiguration _configuration;
+
 
         public RoleService(ApplicationDbContext dbContext,
                            RoleManager<IdentityRole> roleManager,
-                           UserManager<BlogUser> userManager)
+                           UserManager<BlogUser> userManager,
+                           IImageService imageService,
+                           IConfiguration configuration)
         {
             _dbContext = dbContext;
             _roleManager = roleManager;
             _userManager = userManager;
+            _imageService = imageService;
+            _configuration = configuration;
         }
 
         public async Task ManageUserRoles()
@@ -47,10 +56,12 @@ namespace BlogProjectMVC.Services
             var admUser = new BlogUser
             {
                 Email = "vsosa01127@gmail.com",
-                UserName= "vsosa01127@gmail.com",
+                UserName = "vsosa01127@gmail.com",
                 FirstName = "Victor",
                 LastName = "Sosa",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                ImageData = await _imageService.ConvertStringToByteArray(_configuration["DefaultUserImage"]),
+                ImageType = Path.GetExtension(_configuration["DefaultUserImage"])
             };
 
             var modUser = new BlogUser
@@ -59,7 +70,11 @@ namespace BlogProjectMVC.Services
                 UserName= "vsosa@gmail.com",
                 FirstName = "Manuel",
                 LastName = "De Armas",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                ImageData = await _imageService.ConvertStringToByteArray(_configuration["DefaultUserImage"]),
+                ImageType = Path.GetExtension(_configuration["DefaultUserImage"])
+
+
             };
 
             await _userManager.CreateAsync(admUser, "Victor01127*");

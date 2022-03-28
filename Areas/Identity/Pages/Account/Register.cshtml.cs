@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using BlogProjectMVC.Services;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace BlogProjectMVC.Areas.Identity.Pages.Account
 {
@@ -25,17 +27,24 @@ namespace BlogProjectMVC.Areas.Identity.Pages.Account
         private readonly UserManager<BlogUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IBlogEmailSender _emailSender;
+        private readonly IImageService _imageService;
+        private readonly IConfiguration _configuration;
+
 
         public RegisterModel(
             UserManager<BlogUser> userManager,
             SignInManager<BlogUser> signInManager,
             ILogger<RegisterModel> logger,
-            IBlogEmailSender emailSender)
+            IBlogEmailSender emailSender,
+            IImageService imageService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _imageService = imageService;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -48,9 +57,12 @@ namespace BlogProjectMVC.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name ="First name")]
             public string FirstName { get; set; }
 
             [Required]
+            [Display(Name = "Last name")]
+
             public string LastName { get; set; }
 
             [Required]
@@ -82,7 +94,16 @@ namespace BlogProjectMVC.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new BlogUser { FirstName= Input.FirstName, LastName=Input.LastName, UserName = Input.Email, Email = Input.Email };
+                var user = new BlogUser
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    ImageData = await _imageService.ConvertStringToByteArray(_configuration["DefaultUserImage"]),
+                    ImageType = Path.GetExtension(_configuration["DefaultUserImage"])
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

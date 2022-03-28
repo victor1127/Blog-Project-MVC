@@ -36,16 +36,30 @@ namespace BlogProjectMVC.Services
             // Replace all spaces with the hyphen.  
             output = Regex.Replace(output, @"\s", "-");
 
-            if (IsUniqueSlug(output)) return output;
-
-            return null;
-            
+            return output.ToLower(); 
         }
 
-        public bool IsUniqueSlug(string slug)
+        public bool IsUniqueSlug(string slug, int? postId)
         {
-            return !_dbContext.Posts.Any(s => s.Slug == slug);
+            return !_dbContext.Posts.Any(p => p.Slug == slug && p.Id!=postId);
         }
+
+        public string ConfirmSlug(string slug, int? postId)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return "This tittle resulted in an empty slug. Be creative and think of a good one.";
+            }
+
+            if (!IsUniqueSlug(slug, postId))
+            {
+                return "This tittle already exist, so a unique SLUG could not be created.";
+            }
+
+            return "";
+
+        }
+
     }
 
 }

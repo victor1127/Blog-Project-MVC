@@ -63,8 +63,6 @@ namespace BlogProjectMVC.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    //<a href="http://example.com/foo.aspx?email=john.smith%40foo.com">Click me</a>
-
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
