@@ -10,6 +10,9 @@ using BlogProjectMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using BlogProjectMVC.Services;
+using BlogProjectMVC.ViewModels;
+using Microsoft.Extensions.Options;
+using X.PagedList;
 
 namespace BlogProjectMVC.Controllers
 {
@@ -19,22 +22,31 @@ namespace BlogProjectMVC.Controllers
         private readonly UserManager<BlogUser> _userManager;
         private readonly ISlugService _slugService;
         private readonly IImageService _imageService;
+        private readonly PageListSettings _pageListSettings;
         public PostsController(ApplicationDbContext context,
                                UserManager<BlogUser> userManager,
                                ISlugService slugservice,
-                               IImageService imageService)
+                               IImageService imageService,
+                               IOptions<PageListSettings> pageListSettings)
         {
             _context = context;
             _userManager = userManager;
             _slugService = slugservice;
             _imageService = imageService;
+            _pageListSettings = pageListSettings.Value;
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var applicationDbContext = _context.Posts.Include(p => p.Author)/*.Include(p => p.Blog)*/;
-            return View(await applicationDbContext.ToListAsync());
+            var pageNumber = page ?? _pageListSettings.PageNumber;
+            var pageSize = _pageListSettings.PageSize;
+
+            var posts = _context.Posts.Include(p => p.Author)
+                                      .OrderByDescending(p => p.Created)
+                                      .ToPagedListAsync(pageNumber, pageSize);
+
+            return View(await posts);
         }
 
         // GET: Posts/Details/5
@@ -59,12 +71,20 @@ namespace BlogProjectMVC.Controllers
             return View(post);
         }
 
-        public IActionResult PostsBlog(int? id)
+        public async Task<IActionResult> PostsBlog(int? id, int? page)
         {
+            ViewData["BlogPostsId"] = id;
             if (id == null) return NotFound();
 
-            var posts = _context.Posts.Any();
-            return View();
+            var pageNumber = page ?? _pageListSettings.PageNumber;
+
+            var posts = _context.Posts.Where(p => p.BlogId == id)
+                                      .Include(p => p.Author)
+                                      .OrderByDescending(p=>p.Created)
+                                      .ToPagedListAsync(pageNumber, _pageListSettings.PageSize);
+
+            if (posts == null) return NotFound();
+            return View(await posts);
         }
         public IActionResult PostsTags(string tagTittle)
         {
@@ -193,7 +213,7 @@ namespace BlogProjectMVC.Controllers
                     dbPost.BlogId = post.BlogId;
                     dbPost.Abstract = post.Abstract;
                     dbPost.Content = post.Content;
-                    dbPost.State = post.State;
+                    dbPost.Status = post.Status;
                     dbPost.ImageData = await _imageService.ConvertFileToByteArray(post.ImageFile);
                     dbPost.ImageType = post.ImageFile?.ContentType;
 
@@ -230,7 +250,29 @@ namespace BlogProjectMVC.Controllers
             ViewData["Tags"] = new SelectList(tagValues);
             return View(post);
         }
+        public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+        {
+            int pageNumber = page ?? _pageListSettings.PageNumber;
+            int pageSize = _pageListSettings.PageSize;
 
+            var posts = _context.Posts.Include(p => p.Author)
+                                      .OrderByDescending(p => p.Created)
+                                      .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.ToLower();
+                ViewData["SearchTerm"] = term;
+
+                posts = posts.Where(p => p.Title.ToLower().Contains(term) ||
+                                    p.Abstract.ToLower().Contains(term) ||
+                                    p.Author.FirstName.ToLower().Contains(term) ||
+                                    p.Author.LastName.ToLower().Contains(term)
+                                   );
+            }
+
+            return View(await posts.ToPagedListAsync(pageNumber,pageSize));
+        }
         // GET: Posts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

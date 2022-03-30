@@ -43,7 +43,7 @@
 
     <div class="row">
         <div class="col">
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+            @Html.PagedListPager(Model, page => Url.Action("SearchIndex", new { page = page, searchIndex = ViewData["SearchIndex"]}),
              new PagedListRenderOptionsBase
              {
                  LiElementClasses = new string[] { "page-item" },

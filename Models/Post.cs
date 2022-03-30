@@ -32,7 +32,7 @@ namespace BlogProjectMVC.Models
         [DataType(DataType.Date)]
         [Display(Name = "Updated date")]
         public DateTime? Updated { get; set; }
-        public PostStates State { get; set; }
+        public PostStates Status { get; set; }
         public string Slug { get; set; }
         [Display(Name ="Cover")]
         public byte[] ImageData { get; set; }

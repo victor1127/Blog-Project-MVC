@@ -16,7 +16,7 @@
     <div class="row gy-3 d-flex justify-content-center">
 
         @foreach (var post in Model)
-         {
+        {
             <div class="col-md-3 col-sm-6 ">
                 <div class="card h-100">
                     <img src="@_imageService.ConvertByteArrayToFile(post.ImageData, post.ImageType)" class="card-img-top" alt="Cover image">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-         }
+        }
 
         <div class="row">
             <div class="col fs-6 lead">
@@ -40,7 +40,7 @@
 
         <div class="row">
             <div class="col">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                @Html.PagedListPager(Model, page => Url.Action("PostsBlog", new { page = page, id = ViewData["BlogPostsId"]}),
                new PagedListRenderOptionsBase
                {
                    LiElementClasses = new string[] { "page-item" },

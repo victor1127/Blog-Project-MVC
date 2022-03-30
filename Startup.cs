@@ -47,6 +47,8 @@ namespace BlogProjectMVC
             services.AddScoped<RoleService>();
 
             services.Configure<EmailSettingsModel>(Configuration.GetSection("EmailSettings"));
+            
+            services.Configure<PageListSettings>(Configuration.GetSection("PageListSettings"));
 
             services.AddScoped<IBlogEmailSender, EmailService>();
             

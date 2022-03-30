@@ -10,6 +10,9 @@ using BlogProjectMVC.Models;
 using BlogProjectMVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using X.PagedList;
+using Microsoft.Extensions.Options;
+using BlogProjectMVC.ViewModels;
 
 namespace BlogProjectMVC.Controllers
 {
@@ -18,22 +21,31 @@ namespace BlogProjectMVC.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
-        public BlogsController(ApplicationDbContext context, IImageService imageService, UserManager<BlogUser> userManager)
+        private readonly PageListSettings _pageListSettings;
+        public BlogsController(ApplicationDbContext context,
+                               IImageService imageService, 
+                               UserManager<BlogUser> userManager,
+                               IOptions<PageListSettings> pageListSettings)
         {
             _context = context;
             _imageService = imageService;
             _userManager = userManager;
+            _pageListSettings = pageListSettings.Value;
         }
 
         // GET: Blogs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            int pageNumber = page ?? _pageListSettings.PageNumber;
+            int pageSize = _pageListSettings.PageSize;
+
             var blogs = _context.Blogs
-                        //.Where(b=>b.Posts.Count>0)
-                        .Where(b=>b.Posts.Any(p=>p.State==Enums.PostStates.Ready))
-                        .Include(b => b.Author);
+                        .Where(b=>b.Posts.Any(p=>p.Status==Enums.PostStates.Ready))
+                        .Include(b => b.Author)
+                        .OrderByDescending(b=>b.Created)
+                        .ToPagedListAsync(pageNumber, pageSize);
                                                
-            return View(await blogs.ToListAsync());
+            return View(await blogs);
         }
 
         // GET: Blogs/Details/5
@@ -47,6 +59,7 @@ namespace BlogProjectMVC.Controllers
             var blog = await _context.Blogs
                 .Include(b => b.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (blog == null)
             {
                 return NotFound();
@@ -150,6 +163,31 @@ namespace BlogProjectMVC.Controllers
             return View(blog);
         }
 
+        public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+        {
+            var pageNumber = page ?? _pageListSettings.PageNumber;
+            var pageSize = _pageListSettings.PageSize;
+
+            var blogs = _context.Blogs
+                                   .Where(b => b.Posts.Any(p => p.Status == Enums.PostStates.Ready))
+                                   .Include(b => b.Author)
+                                   .OrderByDescending(b=>b.Created)
+                                   .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.ToLower();
+                ViewData["SearchIndex"] = term;
+
+                blogs = blogs.Where(b => b.Title.ToLower().Contains(term) ||
+                                    b.Description.ToLower().Contains(term) ||
+                                    b.Author.FirstName.ToLower().Contains(term) ||
+                                    b.Author.LastName.ToLower().Contains(term)
+                                    );                              
+            }
+   
+            return View(await blogs.ToPagedListAsync(pageNumber, pageSize));
+        }
         // GET: Blogs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
